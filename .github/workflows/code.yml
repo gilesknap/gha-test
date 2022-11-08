@@ -42,9 +42,25 @@ jobs:
         if: env.TRUE_BOOL
         run: echo Tautology # works
 
+      - name: check False bool env
+        if: ${{ ! env.TRUE_BOOL }}
+        run: echo { Tautology }
+
+      - name: check True bool env
+        if: github.env.TRUE_BOOL
+        run: echo Tautology
+
       - name: check True bool env
         if: ${{ env.TRUE_BOOL }}
-        run: echo { Tautology }
+        run: echo { Tautology } # works
+
+      - name: check True bool env
+        if: ${{ github.env.TRUE_BOOL }}
+        run: echo { Tautology } # works
+
+      - name: check Blank
+        if: ${{  }}
+        run: echo Blank
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
@@ -58,7 +74,7 @@ jobs:
         run: |
           echo PYTHON ${{ env.PYTHON }} # works
           echo TAGGED ${{ env.TAGGED }} # works
-          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # fails ($GITHUB_ENV) is local to job
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # fails $GITHUB_ENV is local to job
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
