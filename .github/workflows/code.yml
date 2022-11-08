@@ -1,0 +1,39 @@
+name: Code CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Run every Monday at 8am to check latest versions of dependencies
+    - cron: "0 8 * * WED"
+env:
+  # Target python version. Make sure Dockerfile FROM's match this.
+  PYTHON: "3.10"
+  TAGGED: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+
+jobs:
+  test:
+    # pull requests are a duplicate of a branch push if within the same repo.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # image names must be all lower case
+      - run: |
+          echo IMAGE_REPOSITORY=$(tr '[:upper:]' '[:lower:]' <<< "${{ github.repository }}") >> $GITHUB_ENV
+
+      - name: Setup python
+        run: |
+          echo PYTHON ${{ env.PYTHON }}
+          echo TAGGED ${{ env.TAGGED }}
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
+
+      - name: check TAGGED
+        if: ${{ ! env.TAGGED }}
+        run: echo this is not tagged
+
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@v1
