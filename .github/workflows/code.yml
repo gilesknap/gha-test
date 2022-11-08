@@ -10,6 +10,7 @@ env:
   # Target python version. Make sure Dockerfile FROM's match this.
   PYTHON: "3.10"
   TAGGED: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+  TRUE_BOOL: true
 
 jobs:
   test:
@@ -41,6 +42,10 @@ jobs:
       - name: check TAGGED env
         if: ${{ ! env.TAGGED }}
         run: echo this is not tagged
+
+      - name: check True bool env
+        if: env.TRUE_BOOL
+        run: echo Tautology
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
