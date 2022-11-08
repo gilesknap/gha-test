@@ -36,7 +36,7 @@ jobs:
           echo NOT TAGGED IN-LNE ${{ !( env.TAGGED ) }}
           echo NOT TAGGED1 ${{ env.NOT_TAGGED1 }}
           echo NOT TAGGED2 ${{ env.NOT_TAGGED2 }}
-          echo NOT TAGGED full ${{ github.event_name != 'push' || startsWith(github.ref, 'refs/tags') }}
+          echo NOT TAGGED full ${{ ! (github.event_name == 'push' && startsWith(github.ref, 'refs/tags')) }}
 
       - name: Job 1 TRUE_BOOL
         run: |
