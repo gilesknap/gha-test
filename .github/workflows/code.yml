@@ -14,6 +14,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ job.env.TRUE_BOOL }}
 
     steps:
       - name: Checkout
@@ -72,7 +73,6 @@ jobs:
 
   test2:
     needs: test
-    if: github:env.TRUE_BOOL
     runs-on: ubuntu-latest
 
     steps:
