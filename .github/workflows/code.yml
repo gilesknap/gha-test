@@ -72,7 +72,7 @@ jobs:
 
   test2:
     needs: test
-    if: ${{ github.env.TRUE_BOOL || true}}
+    if: ${{ env.TRUE_BOOL == true}}
     runs-on: ubuntu-latest
 
     steps:
