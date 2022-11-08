@@ -36,14 +36,16 @@ jobs:
           echo NOT TAGGED ${{ ! env.TAGGED }} # fails - false
           echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
 
+      # BUT these 4 tests imply that you must always use env.
+      # conclusion:
+      #    In the above {{ ! blank_env_var }} evaluated to true (because github.env.TAGGED is blank)
+      #    But ! env.TAGGED did not work -- maybe its not a bool???? but it should be
       - name: Job 1 TRUE_BOOL
         run: |
-          echo TRUE_BOOL ${{ env.TRUE_BOOL }}
-          echo TRUE_BOOL ${{ github.env.TRUE_BOOL }}
-          echo NOT TRUE_BOOL ${{ ! env.TRUE_BOOL }}
-          echo NOT TRUE_BOOL ${{ ! github.env.TAGGED }}
-
-      # These tests
+          echo TRUE_BOOL ${{ env.TRUE_BOOL }} # works - true
+          echo TRUE_BOOL ${{ github.env.TRUE_BOOL }} # fails (blank)
+          echo NOT TRUE_BOOL ${{ ! env.TRUE_BOOL }} # works - false
+          echo NOT TRUE_BOOL ${{ ! github.env.TAGGED }} # fails - true
 
       - name: check not TAGGED github
         if: ${{ ! github.env.TAGGED }}
