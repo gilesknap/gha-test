@@ -23,20 +23,21 @@ jobs:
 
       - name: Job 1 environ
         run: |
-          echo PYTHON ${{ env.PYTHON }} # works
-          echo TAGGED ${{ env.TAGGED }} # works
+          echo PYTHON ${{ env.PYTHON }} # works - 3.10
           echo PYTHON ${{ github.env.PYTHON }} # fails (blank)
-          echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
-          echo PYTHON ${{ github.env.PYTHON }} # fails
-          echo NOT TAGGED ${{ ! env.TAGGED }} # fails (FALSE!)
-          echo NOT TAGGED ${{ ! github.env.TAGGED }} # fails (FALSE!)
-          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # works
 
-      - name: check TAGGED github
+          echo TAGGED ${{ env.TAGGED }} # works
+          echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
+          echo NOT TAGGED ${{ ! env.TAGGED }} # fails - false
+          echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
+
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # works -
+
+      - name: check not TAGGED github
         if: ${{ ! github.env.TAGGED }}
         run: echo HELLO # works
 
-      - name: check TAGGED env
+      - name: check not TAGGED env
         if: ${{ ! env.TAGGED }}
         run: echo HELLO # fails - does not run
 
