@@ -27,40 +27,42 @@ jobs:
           echo TAGGED ${{ env.TAGGED }} # works
           echo PYTHON ${{ github.env.PYTHON }} # fails (blank)
           echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
+          echo PYTHON ${{ github.env.PYTHON }} # fails
           echo NOT TAGGED ${{ ! env.TAGGED }} # fails (FALSE!)
+          echo NOT TAGGED ${{ ! github.env.TAGGED }} # fails (FALSE!)
           echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # works
 
       - name: check TAGGED github
         if: ${{ ! github.env.TAGGED }}
-        run: echo this is not tagged # works
+        run: echo HELLO # works
 
       - name: check TAGGED env
         if: ${{ ! env.TAGGED }}
-        run: echo this is not tagged # fails - does not run
+        run: echo HELLO # fails - does not run
 
       - name: check True bool env
         if: env.TRUE_BOOL
-        run: echo Tautology # works
+        run: echo HELLO # works
 
       - name: check False bool env
         if: ${{ ! env.TRUE_BOOL }}
-        run: echo { Tautology }
+        run: echo HELLO # works - does not run
 
       - name: check True bool env
         if: github.env.TRUE_BOOL
-        run: echo Tautology
+        run: echo HELLO # fails - does not run
 
       - name: check True bool env
         if: ${{ env.TRUE_BOOL }}
-        run: echo { Tautology } # works
+        run: echo HELLO # works
 
       - name: check True bool env
         if: ${{ github.env.TRUE_BOOL }}
-        run: echo { Tautology } # works
+        run: echo HELLO # fails - does not run
 
       - name: check Blank
         if: ${{ env.NOTHING }}
-        run: echo Blank
+        run: echo HELLO # works - does not run as expected
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
