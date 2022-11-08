@@ -14,7 +14,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.env.TRUE_BOOL }}
 
     steps:
       - name: Checkout
@@ -33,11 +32,11 @@ jobs:
         run: |
           echo TAGGED ${{ env.TAGGED }} # works - false
           echo TAGGED ${{ github.env.TAGGED }} # fails (blank - don't use github sub-context!)
-          echo NOT TAGGED IN-LNE ${{ ! env.TAGGED }}
-          echo NOT TAGGED IN-LNE ${{ !( env.TAGGED ) }}
-          echo NOT TAGGED1 ${{ env.NOT_TAGGED1 }}
-          echo NOT TAGGED2 ${{ env.NOT_TAGGED2 }}
-          echo NOT TAGGED full ${{ ! (github.event_name == 'push' && startsWith(github.ref, 'refs/tags')) }}
+          echo NOT TAGGED IN-LNE ${{ ! env.TAGGED }} # fails
+          echo NOT TAGGED IN-LNE ${{ !( env.TAGGED ) }} # fails
+          echo NOT TAGGED1 ${{ env.NOT_TAGGED1 }} # works
+          echo NOT TAGGED2 ${{ env.NOT_TAGGED2 }} # fails
+          echo NOT TAGGED full ${{ ! (github.event_name == 'push' && startsWith(github.ref, 'refs/tags')) }} # works
 
       - name: Job 1 TRUE_BOOL
         run: |
@@ -73,6 +72,8 @@ jobs:
 
   test2:
     needs: test
+    # THIS NEVER WORKS - WHY ???????
+    if: ${{ github.env.TRUE_BOOL }}
     runs-on: ubuntu-latest
 
     steps:
