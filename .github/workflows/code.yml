@@ -39,6 +39,7 @@ jobs:
           echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
           echo NOT TAGGED ${{ ! github.env.NOT_TAGGED }}
           echo NOT TAGGED2 ${{ ! github.env.NOT_TAGGED2 }}
+          echo NOT TAGGED full ${{ github.event_name != 'push' || startsWith(github.ref, 'refs/tags') }}
 
       # BUT these 4 tests imply that you must always use env.
       # conclusion:
