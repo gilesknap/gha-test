@@ -25,15 +25,26 @@ jobs:
       - run: |
           echo IMAGE_REPOSITORY=$(tr '[:upper:]' '[:lower:]' <<< "${{ github.repository }}") >> $GITHUB_ENV
 
-      - name: Setup python
+      - name: Job 1 environ
         run: |
           echo PYTHON ${{ env.PYTHON }}
           echo TAGGED ${{ env.TAGGED }}
           echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
 
       - name: check TAGGED
-        if: ${{ ! env.TAGGED }}
+        if: ${{ ! github.env.TAGGED }}
         run: echo this is not tagged
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
+
+  test2:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: job 2 environ
+        run: |
+          echo PYTHON ${{ env.PYTHON }}
+          echo TAGGED ${{ env.TAGGED }}
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
