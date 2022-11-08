@@ -14,7 +14,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ job.env.TRUE_BOOL }}
+    if: ${{ github.env.TRUE_BOOL }}
 
     steps:
       - name: Checkout
