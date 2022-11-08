@@ -8,6 +8,7 @@ env:
   PYTHON: "3.10"
   TAGGED: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
   NOT_TAGGED: ${{ ! (github.event_name == 'push' && startsWith(github.ref, 'refs/tags')) }}
+  NOT_TAGGED2: ${{ github.event_name != 'push' || startsWith(github.ref, 'refs/tags') }}
   TRUE_BOOL: true
 
 jobs:
@@ -37,6 +38,7 @@ jobs:
           echo NOT TAGGED ${{ (! env.TAGGED) }} # fails - false ------------------- THIS IS THE PROBLEM --------------------
           echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
           echo NOT TAGGED ${{ ! github.env.NOT_TAGGED }}
+          echo NOT TAGGED2 ${{ ! github.env.NOT_TAGGED2 }}
 
       # BUT these 4 tests imply that you must always use env.
       # conclusion:
