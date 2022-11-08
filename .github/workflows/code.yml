@@ -3,9 +3,6 @@ name: Code CI
 on:
   push:
   pull_request:
-  schedule:
-    # Run every Monday at 8am to check latest versions of dependencies
-    - cron: "0 8 * * WED"
 env:
   # Target python version. Make sure Dockerfile FROM's match this.
   PYTHON: "3.10"
@@ -14,8 +11,6 @@ env:
 
 jobs:
   test:
-    # pull requests are a duplicate of a branch push if within the same repo.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
 
     steps:
@@ -28,24 +23,28 @@ jobs:
 
       - name: Job 1 environ
         run: |
-          echo PYTHON ${{ env.PYTHON }}
-          echo TAGGED ${{ env.TAGGED }}
-          echo PYTHON ${{ github.env.PYTHON }}
-          echo TAGGED ${{ github.env.TAGGED }}
-          echo NOT TAGGED ${{ ! env.TAGGED }}
-          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
+          echo PYTHON ${{ env.PYTHON }} # works
+          echo TAGGED ${{ env.TAGGED }} # works
+          echo PYTHON ${{ github.env.PYTHON }} # fails (blank)
+          echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
+          echo NOT TAGGED ${{ ! env.TAGGED }} # fails (FALSE!)
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # works
 
       - name: check TAGGED github
         if: ${{ ! github.env.TAGGED }}
-        run: echo this is not tagged
+        run: echo this is not tagged # works
 
       - name: check TAGGED env
         if: ${{ ! env.TAGGED }}
-        run: echo this is not tagged
+        run: echo this is not tagged # fails - does not run
 
       - name: check True bool env
         if: env.TRUE_BOOL
-        run: echo Tautology
+        run: echo Tautology # works
+
+      - name: check True bool env
+        if: ${{ env.TRUE_BOOL }}
+        run: echo { Tautology }
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
@@ -57,9 +56,9 @@ jobs:
     steps:
       - name: job 2 environ
         run: |
-          echo PYTHON ${{ env.PYTHON }}
-          echo TAGGED ${{ env.TAGGED }}
-          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
+          echo PYTHON ${{ env.PYTHON }} # works
+          echo TAGGED ${{ env.TAGGED }} # works
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # fails ($GITHUB_ENV) is local to job
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
