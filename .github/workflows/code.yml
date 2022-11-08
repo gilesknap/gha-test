@@ -59,7 +59,7 @@ jobs:
         run: echo { Tautology } # works
 
       - name: check Blank
-        if: ${{  }}
+        if: ${{ env.NOTHING }}
         run: echo Blank
 
       - name: Dump context
