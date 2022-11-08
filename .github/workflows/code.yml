@@ -29,6 +29,8 @@ jobs:
         run: |
           echo PYTHON ${{ env.PYTHON }}
           echo TAGGED ${{ env.TAGGED }}
+          echo PYTHON ${{ github.env.PYTHON }}
+          echo TAGGED ${{ github.env.TAGGED }}
           echo NOT TAGGED ${{ ! env.TAGGED }}
           echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
 
