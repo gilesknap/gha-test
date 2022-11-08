@@ -33,7 +33,7 @@ jobs:
         run: |
           echo TAGGED ${{ env.TAGGED }} # works - false
           echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
-          echo NOT TAGGED ${{ ! env.TAGGED }} # fails - false
+          echo NOT TAGGED ${{ (! env.TAGGED) }} # fails - false ------------------- THIS IS THE PROBLEM --------------------
           echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
 
       # BUT these 4 tests imply that you must always use env.
