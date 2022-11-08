@@ -26,35 +26,21 @@ jobs:
       - name: environ
         run: |
           echo PYTHON ${{ env.PYTHON }} # works - 3.10
-          echo PYTHON ${{ github.env.PYTHON }} # fails (blank)
+          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # works
 
-          echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }} # works -
-
-      # these 4 tests imply that you must use env. for evaluating an env. var BUT use github.env. for an expression that uses an env var
       - name: Job 1 TAGGED
         run: |
           echo TAGGED ${{ env.TAGGED }} # works - false
-          echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
+          echo TAGGED ${{ github.env.TAGGED }} # fails (blank - don't use github sub-context!)
           echo NOT TAGGED ${{ (! env.TAGGED) }} # fails - false ------------------- THIS IS THE PROBLEM --------------------
-          echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
-          echo NOT TAGGED ${{ ! github.env.NOT_TAGGED }}
-          echo NOT TAGGED2 ${{ ! github.env.NOT_TAGGED2 }}
+          echo NOT TAGGED ${{ ! env.NOT_TAGGED }}
+          echo NOT TAGGED2 ${{ ! env.NOT_TAGGED2 }}
           echo NOT TAGGED full ${{ github.event_name != 'push' || startsWith(github.ref, 'refs/tags') }}
 
-      # BUT these 4 tests imply that you must always use env.
-      # conclusion:
-      #    In the above {{ ! blank_env_var }} evaluated to true (because github.env.TAGGED is blank)
-      #    But ! env.TAGGED did not work -- maybe its not a bool???? but it should be
       - name: Job 1 TRUE_BOOL
         run: |
           echo TRUE_BOOL ${{ env.TRUE_BOOL }} # works - true
-          echo TRUE_BOOL ${{ github.env.TRUE_BOOL }} # fails (blank)
           echo NOT TRUE_BOOL ${{ ! env.TRUE_BOOL }} # works - false
-          echo NOT TRUE_BOOL ${{ ! github.env.TAGGED }} # fails - true
-
-      - name: check not TAGGED github
-        if: ${{ ! github.env.TAGGED }}
-        run: echo HELLO # works - runs
 
       - name: check not TAGGED env
         if: ${{ ! env.TAGGED }}
@@ -68,21 +54,9 @@ jobs:
         if: ${{ env.TRUE_BOOL }}
         run: echo HELLO # works runs
 
-      - name: check True bool env
-        if: github.env.TRUE_BOOL
-        run: echo HELLO # fails - does not run
-
-      - name: check True bool env
-        if: ${{ github.env.TRUE_BOOL }}
-        run: echo HELLO # fails - does not run
-
       - name: check False bool env
         if: ${{ ! env.TRUE_BOOL }}
-        run: echo HELLO # works - does not run BUT MAYBE because it fails to evaluate env.TRUE_BOOL?
-
-      - name: check False bool github
-        if: ${{ ! github.env.TRUE_BOOL }}
-        run: echo HELLO # DOES RUN
+        run: echo HELLO # works - does not run
 
       - name: check Blank
         if: ${{ env.NOTHING }}
