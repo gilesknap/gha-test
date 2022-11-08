@@ -48,3 +48,6 @@ jobs:
           echo PYTHON ${{ env.PYTHON }}
           echo TAGGED ${{ env.TAGGED }}
           echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
+
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@v1
