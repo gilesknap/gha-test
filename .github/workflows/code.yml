@@ -26,7 +26,7 @@ jobs:
           echo PYTHON ${{ env.PYTHON }} # works - 3.10
           echo PYTHON ${{ github.env.PYTHON }} # fails (blank)
 
-          echo TAGGED ${{ env.TAGGED }} # works
+          echo TAGGED ${{ env.TAGGED }} # works - false
           echo TAGGED ${{ github.env.TAGGED }} # fails (blank)
           echo NOT TAGGED ${{ ! env.TAGGED }} # fails - false
           echo NOT TAGGED ${{ ! github.env.TAGGED }} # Succeeds - true
@@ -35,7 +35,7 @@ jobs:
 
       - name: check not TAGGED github
         if: ${{ ! github.env.TAGGED }}
-        run: echo HELLO # works
+        run: echo HELLO # works - runs
 
       - name: check not TAGGED env
         if: ${{ ! env.TAGGED }}
@@ -43,27 +43,31 @@ jobs:
 
       - name: check True bool env
         if: env.TRUE_BOOL
-        run: echo HELLO # works
+        run: echo HELLO # works - runs
 
-      - name: check False bool env
-        if: ${{ ! env.TRUE_BOOL }}
-        run: echo HELLO # works - does not run
+      - name: check True bool env {}
+        if: ${{ env.TRUE_BOOL }}
+        run: echo HELLO # works runs
 
       - name: check True bool env
         if: github.env.TRUE_BOOL
         run: echo HELLO # fails - does not run
 
       - name: check True bool env
-        if: ${{ env.TRUE_BOOL }}
-        run: echo HELLO # works
-
-      - name: check True bool env
         if: ${{ github.env.TRUE_BOOL }}
         run: echo HELLO # fails - does not run
 
+      - name: check False bool env
+        if: ${{ ! env.TRUE_BOOL }}
+        run: echo HELLO # works - does not run BUT MAYBE because it fails to evaluate env.TRUE_BOOL?
+
       - name: check Blank
         if: ${{ env.NOTHING }}
-        run: echo HELLO # works - does not run as expected
+        run: echo HELLO # works - does not run
+
+      - name: check Blank
+        if: ${{ ! env.NOTHING }}
+        run: echo HELLO # also does not run
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
