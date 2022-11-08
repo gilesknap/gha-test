@@ -61,13 +61,17 @@ jobs:
         if: ${{ ! env.TRUE_BOOL }}
         run: echo HELLO # works - does not run BUT MAYBE because it fails to evaluate env.TRUE_BOOL?
 
+      - name: check False bool github
+        if: ${{ ! github.env.TRUE_BOOL }}
+        run: echo HELLO # works - does not run BUT MAYBE because it fails to evaluate env.TRUE_BOOL?
+
       - name: check Blank
         if: ${{ env.NOTHING }}
         run: echo HELLO # works - does not run
 
       - name: check Blank
         if: ${{ ! env.NOTHING }}
-        run: echo HELLO # also does not run
+        run: echo HELLO # does run - WAIT WHAT ????
 
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@v1
