@@ -29,10 +29,15 @@ jobs:
         run: |
           echo PYTHON ${{ env.PYTHON }}
           echo TAGGED ${{ env.TAGGED }}
+          echo NOT TAGGED ${{ ! env.TAGGED }}
           echo IMAGE_REPOSITORY ${{ env.IMAGE_REPOSITORY }}
 
-      - name: check TAGGED
+      - name: check TAGGED github
         if: ${{ ! github.env.TAGGED }}
+        run: echo this is not tagged
+
+      - name: check TAGGED env
+        if: ${{ ! env.TAGGED }}
         run: echo this is not tagged
 
       - name: Dump context
