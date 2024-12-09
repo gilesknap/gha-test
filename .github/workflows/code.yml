@@ -31,6 +31,7 @@ jobs:
 
       - name: Job 1 TAGGED
         run: |
+          echo "test non existent secret: ${{secrets.I_DONT_EXIST}}"
           echo TAGGED ${{ env.TAGGED }} # works - false
           echo TAGGED ${{ github.env.TAGGED }} # fails (blank - don't use github sub-context!)
           echo NOT TAGGED IN-LNE ${{ ! env.TAGGED }} # fails
